@@ -78,7 +78,7 @@ pipeline {
 FROM openjdk:11-jre-slim
 ENV JAVA_OPTS="-XX:InitialRAMPercentage=40.0 -XX:MaxRAMPercentage=80.0"
 ADD ./${ECR_IMAGE}.jar /home/${ECR_IMAGE}.jar
-CMD nohup java -jar -Dspring.profiles.active="mysql" /home/${ECR_IMAGE}.jar 1> /dev/null 2>&1
+CMD ["nohup", "java", "-jar", "-Dspring.profiles.active='mysql'", "/home/${ECR_IMAGE}.jar"]
 EXPOSE 8080
 EOF
 pwd
