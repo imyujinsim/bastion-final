@@ -4,7 +4,7 @@ pipeline {
     tools {
       // Jenkins 'Global Tool Configuration' 에 설정한 버전과 연동
       maven "Maven"
-      docker "docker"
+      dockerTool "docker"
     }
 
     environment {
