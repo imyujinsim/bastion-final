@@ -74,8 +74,9 @@ pipeline {
                     try {
                         sh"""
                         #!/bin/bash
-			pwd
 			cd target
+			pwd
+			ls
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
 ENV JAVA_OPTS="-XX:InitialRAMPercentage=40.0 -XX:MaxRAMPercentage=80.0"
