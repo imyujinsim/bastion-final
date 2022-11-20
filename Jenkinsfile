@@ -50,7 +50,7 @@ pipeline {
                         // sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/src/main/resources/application.yaml"
                         sh './mvnw package'
                         sh """
-			cd deploy
+			cd /var/lib/jenkins/workspace/${env.JOB_NAME}/
                         cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar .
                         """
                         env.mavenBuildResult=true
@@ -74,9 +74,6 @@ pipeline {
                     try {
                         sh"""
                         #!/bin/bash
-			cd target
-			pwd
-			ls
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
 ENV JAVA_OPTS="-XX:InitialRAMPercentage=40.0 -XX:MaxRAMPercentage=80.0"
