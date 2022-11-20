@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        ECR_PATH = '851557167064.dkr.ecr.ap-northeast-2.amazonaws.com'
+        ECR_PATH = '851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/bastion'
         ECR_IMAGE = 'demo-maven-springboot'
         REGION = 'ap-northeast-2'
         ACCOUNT_ID='851557167064'
@@ -81,7 +81,7 @@ ADD ./deploy/${ECR_IMAGE}.jar /home/${ECR_IMAGE}.jar
 CMD nohup java -jar -Dspring.profiles.active="mysql" /home/${ECR_IMAGE}.jar 1> /dev/null 2>&1
 EXPOSE 8080
 EOF"""
-                        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}":"aws_credentials") {
+                        docker.withRegistry("https://${ECR_PATH}", "aws_credentials") {
                             def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
                             image.push()
                         }
