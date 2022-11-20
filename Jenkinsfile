@@ -50,7 +50,8 @@ pipeline {
                         // sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/src/main/resources/application.yaml"
                         sh './mvnw package'
                         sh """
-                        cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar ./deploy/${ECR_IMAGE}.jar
+			cd deploy
+                        cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar .
                         """
                         env.mavenBuildResult=true
                     } catch (error) {
