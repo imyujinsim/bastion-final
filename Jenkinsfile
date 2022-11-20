@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        ECR_PATH = '851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/bastion'
+        ECR_PATH = '851557167064.dkr.ecr.ap-northeast-2.amazonaws.com'
         ECR_IMAGE = 'demo-maven-springboot'
         REGION = 'ap-northeast-2'
         ACCOUNT_ID='851557167064'
