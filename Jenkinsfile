@@ -72,7 +72,7 @@ pipeline {
             steps {
                 script{
                     try {
-			sh "pwd"
+			cd target
                         sh"""
                         #!/bin/bash
                         cat>Dockerfile<<-EOF
