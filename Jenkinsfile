@@ -81,7 +81,7 @@ ADD ./deploy/${ECR_IMAGE}.jar /home/${ECR_IMAGE}.jar
 CMD nohup java -jar -Dspring.profiles.active="mysql" /home/${ECR_IMAGE}.jar 1> /dev/null 2>&1
 EXPOSE 8080
 EOF"""
-                        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}":aws_credentials) {
+                        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}":"aws_credentials") {
                             def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
                             image.push()
                         }
