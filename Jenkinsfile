@@ -72,6 +72,7 @@ pipeline {
             steps {
                 script{
                     try {
+			sh "echo pwd"
                         sh"""
                         #!/bin/bash
                         cat>Dockerfile<<-EOF
