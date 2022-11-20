@@ -19,7 +19,7 @@ pipeline {
                 script {
                     try {
                         git branch: 'main', 
-                            credentialsId: 'GitCredential',
+                            credentialsId: 'github',
                             url: 'https://github.com/imyujinsim/bastion-final'
                         sh "ls -lat"
                         env.cloneResult=true
