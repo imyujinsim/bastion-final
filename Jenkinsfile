@@ -51,7 +51,7 @@ pipeline {
                         sh './mvnw package'
                         sh """
                         cd deploy
-                        cp /var/jenkins_home/workspace/${env.JOB_NAME}/target/*.jar ./${ECR_IMAGE}.jar
+                        cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar ./${ECR_IMAGE}.jar
                         """
                         env.mavenBuildResult=true
                     } catch (error) {
