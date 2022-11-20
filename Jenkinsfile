@@ -70,8 +70,6 @@ pipeline {
                 }
             }
             steps {
-                script{
-                    try {
                         sh"""
                         #!/bin/bash
                         cd target
@@ -87,8 +85,6 @@ EOF
 pwd
 ls
 """
-                }
-            }
         }
         stage('Push to ECR'){
             steps {
