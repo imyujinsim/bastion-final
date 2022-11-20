@@ -18,12 +18,12 @@ pipeline {
             steps {
                 script {
                     try {
-                        git branch: 'main',
+                        git branch: 'main', 
                             credentialsId: 'github',
                             url: 'https://github.com/imyujinsim/bastion-final'
                         sh "ls -lat"
                         env.cloneResult=true
-
+                        
                     } catch (error) {
                         print(error)
                         env.cloneResult=false
@@ -36,7 +36,7 @@ pipeline {
             when {
                 expression {
                     return env.cloneResult ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/
-                }
+                }                
             }
             steps {
                 script{
@@ -50,7 +50,7 @@ pipeline {
                         // sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/src/main/resources/application.yaml"
                         sh './mvnw package'
                         sh """
-                        cd deploy
+			cd deploy
                         cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar .
                         """
                         env.mavenBuildResult=true
@@ -63,18 +63,20 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build'){
+        stage('Docker Build and Push to ECR'){
             when {
                 expression {
                     return env.mavenBuildResult ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/
                 }
             }
             steps {
+                script{
+                    try {
                         sh"""
                         #!/bin/bash
-                        cd target
-                        pwd
-                        ls
+			cd target
+			pwd
+			ls
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
 ENV JAVA_OPTS="-XX:InitialRAMPercentage=40.0 -XX:MaxRAMPercentage=80.0"
@@ -85,19 +87,23 @@ EOF
 pwd
 ls
 """
-        }
-        stage('Push to ECR'){
-            steps {
-                docker.withRegistry("https://${ECR_PATH}", "ecr:ap-northeast-2:aws_credentials") {
-                    def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
-                        image.push()
+                        docker.withRegistry("https://${ECR_PATH}", "ecr:ap-northeast-2:aws_credentials") {
+                            def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
+                            image.push()
+                        }
+                        
+                        echo 'Remove Deploy Files'
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.dockerBuildResult=true
+                    } catch (error) {
+                        print(error)
+                        echo 'Remove Deploy Files'
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.dockerBuildResult=false
+                        currentBuild.result = 'FAILURE'
+                    }
                 }
-
-                echo 'Remove Deploy Files'
-                sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
-                env.dockerBuildResult=true
             }
         }
     }
-}
 }
