@@ -76,13 +76,9 @@ pipeline {
                         #!/bin/bash
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
-ENV JAVA_OPTS="-XX:InitialRAMPercentage=40.0 -XX:MaxRAMPercentage=80.0"
 ADD ./${ECR_IMAGE}.jar /home/${ECR_IMAGE}.jar
 CMD ["nohup", "java", "-jar", "-Dspring.profiles.active='mysql'", "/home/${ECR_IMAGE}.jar"]
-EXPOSE 8080
 EOF
-pwd
-ls
 """
                         docker.withRegistry("https://${ECR_PATH}", "ecr:ap-northeast-2:aws_credentials") {
                             def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
