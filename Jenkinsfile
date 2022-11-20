@@ -57,7 +57,7 @@ pipeline {
                     } catch (error) {
                         print(error)
                         echo 'Failed to build jar file'
-                        env.mavenBuildResult=false
+                        env.maveBuildResult=false
                         currentBuild.result = 'FAILURE'
                     }
                 }
@@ -74,6 +74,7 @@ pipeline {
                     try {
                         sh"""
                         #!/bin/bash
+			pwd
 			cd target
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
