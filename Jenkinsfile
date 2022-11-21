@@ -136,6 +136,7 @@ EOF"""
                             git add .
                             git commit -m "Deploy ${env.JOB_NAME} ${env.BUILD_NUMBER}"
                             git push https://github.com/imyujinsim/bastion-final-cd.git
+			    """
                         }                      
                         sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         env.pushYamlResult=true
