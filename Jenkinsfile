@@ -124,7 +124,7 @@ spec:
         app: was
     spec:
       containers:
-      - image: 851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/demo-maven-springboot:ver${env.BUILD_NUMBER}
+      - image: 851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/demo-maven-springboot:${env.BUILD_NUMBER}
         name: petclinic
 EOF"""
                         //sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/yaml/deploy.yaml"
