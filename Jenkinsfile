@@ -142,7 +142,6 @@ EOF"""
                         env.pushYamlResult=true
                     } catch (error) {
                         print(error)
-                        }
                         sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         env.pushYamlResult=false
                         currentBuild.result = 'FAILURE'
