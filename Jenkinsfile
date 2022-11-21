@@ -110,8 +110,6 @@ EOF
                         git url: 'https://github.com/imyujinsim/bastion-final-cd', branch: "main", credentialsId: 'github'
                         // sh "rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         sh """
-                        mkdir yaml
-                        cd yaml
                         #!/bin/bash
                         cat>deploy.yaml<<-EOF
 apiVersion: apps/v1
