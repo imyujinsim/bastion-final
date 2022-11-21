@@ -118,6 +118,9 @@ metadata:
   name: tomcat-deployment
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: was
   template:
     metadata:
       labels:
