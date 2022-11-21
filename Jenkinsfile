@@ -99,4 +99,60 @@ EOF
             }
         }
     }
+    stage('Push Yaml'){
+            when {
+                expression {
+                    return env.dockerBuildResult ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/
+                }
+            }
+            steps {
+                script{
+                    try {
+                        git url: 'https://github.com/imyujinsim/bastion-final-cd', branch: "main", credentialsId: 'git-cd'
+                        // sh "rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        sh """
+                        mkdir yaml
+                        cd yaml
+                        #!/bin/bash
+                        cat>deploy.yaml<<-EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: was
+    spec:
+      containers:
+      - image: 851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/demo-maven-springboot:ver${env.BUILD_NUMBER}
+        name: petclinic
+EOF"""
+                        //sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/yaml/deploy.yaml"
+                        withCredentials([gitUsernamePassword(credentialsId: 'git-cd')]) {
+                            sh """
+                            git add .
+                            git commit -m "Deploy ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+                            git push https://github.com/imyujinsim/bastion-final-cd.git
+                        }                      
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.pushYamlResult=true
+                    } catch (error) {
+                        print(error)
+                        // echo 'Remove Deploy Files'
+                        // withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "$GIT_CREDENTIALS_ID", usernameVariable: "GIT_AUTHOR_NAME", passwordVariable: "GIT_PASSWORD"]]) {
+                        //     sh """
+                        //     git reset --hard HEAD^
+                        //     git push --force https://${GIT_AUTHOR_NAME}:${GIT_PASSWORD}@${GIT_URL}-yaml
+                        //     """
+                        }
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        env.pushYamlResult=false
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+    }
 }
