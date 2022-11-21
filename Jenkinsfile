@@ -98,7 +98,6 @@ EOF
                 }
             }
         }
-    }
     stage('Push Yaml'){
             when {
                 expression {
@@ -148,5 +147,6 @@ EOF"""
                     }
                 }
             }
+	}
     }
 }
