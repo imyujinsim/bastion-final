@@ -107,7 +107,7 @@ EOF
             steps {
                 script{
                     try {
-                        git url: 'https://github.com/imyujinsim/bastion-final-cd', branch: "main", credentialsId: 'git-cd'
+                        git url: 'https://github.com/imyujinsim/bastion-final-cd', branch: "main", credentialsId: 'github'
                         // sh "rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         sh """
                         mkdir yaml
