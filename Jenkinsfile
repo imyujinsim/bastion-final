@@ -141,12 +141,6 @@ EOF"""
                         env.pushYamlResult=true
                     } catch (error) {
                         print(error)
-                        // echo 'Remove Deploy Files'
-                        // withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "$GIT_CREDENTIALS_ID", usernameVariable: "GIT_AUTHOR_NAME", passwordVariable: "GIT_PASSWORD"]]) {
-                        //     sh """
-                        //     git reset --hard HEAD^
-                        //     git push --force https://${GIT_AUTHOR_NAME}:${GIT_PASSWORD}@${GIT_URL}-yaml
-                        //     """
                         }
                         sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         env.pushYamlResult=false
