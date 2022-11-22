@@ -132,7 +132,7 @@ EOF"""
 	}
     stage('Deploy to K8S'){
 	steps {
-      withKubeConfig([credentialsId: "kubectl-deploy-credentials",
+      withKubeConfig([credentialsId: "kubeconfig",
                         serverUrl: "https://8CADCFAB895961E497B572BE136D3D8D.gr7.ap-northeast-2.eks.amazonaws.com",
                         clusterName: 'test-eks']){
             sh "aws eks --region ap-northeast-2 update-kubeconfig --name test-eks"
