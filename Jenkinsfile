@@ -18,12 +18,12 @@ pipeline {
             steps {
                 script {
                     try {
-                        git branch: 'main', 
+                        git branch: 'main',
                             credentialsId: 'github',
                             url: 'https://github.com/imyujinsim/bastion-final'
                         sh "ls -lat"
                         env.cloneResult=true
-                        
+
                     } catch (error) {
                         print(error)
                         env.cloneResult=false
@@ -36,7 +36,7 @@ pipeline {
             when {
                 expression {
                     return env.cloneResult ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/
-                }                
+                }
             }
             steps {
                 script{
@@ -50,7 +50,7 @@ pipeline {
                         // sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/src/main/resources/application.yaml"
                         sh './mvnw package'
                         sh """
-			cd /var/lib/jenkins/workspace/${env.JOB_NAME}/
+                        cd /var/lib/jenkins/workspace/${env.JOB_NAME}/
                         cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar ./${ECR_IMAGE}.jar
                         """
                         env.mavenBuildResult=true
@@ -84,7 +84,7 @@ EOF
                             def image = docker.build("${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}")
                             image.push()
                         }
-                        
+
                         echo 'Remove Deploy Files'
                         sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         env.dockerBuildResult=true
@@ -98,7 +98,7 @@ EOF
                 }
             }
         }
-    stage('Push Yaml'){
+        stage('Push Yaml'){
             when {
                 expression {
                     return env.dockerBuildResult ==~ /(?i)(Y|YES|T|TRUE|ON|RUN)/
@@ -131,8 +131,10 @@ spec:
         name: petclinic
 EOF"""
     }
+                }
+            }
     stage('Deploy to K8S'){
-        withKubeConfig([credentialsId: "kubectl-deploy-credentials",
+      withKubeConfig([credentialsId: "kubectl-deploy-credentials",
                         serverUrl: "https://8CADCFAB895961E497B572BE136D3D8D.gr7.ap-northeast-2.eks.amazonaws.com",
                         clusterName: 'test-eks']){
             sh "aws eks --region ap-northeast-2 update-kubeconfig --name test-eks"
@@ -140,4 +142,4 @@ EOF"""
         }
     }
 }
-}
+
