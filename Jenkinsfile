@@ -105,8 +105,6 @@ EOF
                 }
             }
             steps {
-                script{
-                    try {
                         git url: 'https://github.com/imyujinsim/bastion-final-cd', branch: "main", credentialsId: 'github'
                         // sh "rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
                         sh """
@@ -131,8 +129,6 @@ spec:
         name: petclinic
 EOF"""
     }
-                }
-            }
 	}
     stage('Deploy to K8S'){
       withKubeConfig([credentialsId: "kubectl-deploy-credentials",
