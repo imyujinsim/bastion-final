@@ -133,6 +133,7 @@ EOF"""
     }
                 }
             }
+	}
     stage('Deploy to K8S'){
       withKubeConfig([credentialsId: "kubectl-deploy-credentials",
                         serverUrl: "https://8CADCFAB895961E497B572BE136D3D8D.gr7.ap-northeast-2.eks.amazonaws.com",
