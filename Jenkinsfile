@@ -130,24 +130,13 @@ spec:
       - image: 851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/demo-maven-springboot:${env.BUILD_NUMBER}
         name: petclinic
 EOF"""
-                        //sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/yaml/deploy.yaml"
-                        withCredentials([gitUsernamePassword(credentialsId: 'git-cd')]) {
-                            sh """
-                            git add .
-                            git commit -m "Deploy ${env.JOB_NAME} ${env.BUILD_NUMBER}"
-                            git push https://github.com/imyujinsim/bastion-final-cd.git
-			    """
-                        }                      
-                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
-                        env.pushYamlResult=true
-                    } catch (error) {
-                        print(error)
-                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
-                        env.pushYamlResult=false
-                        currentBuild.result = 'FAILURE'
-                    }
-                }
-            }
-	}
+    }
+    stage('Deploy to K8S'){
+        withKubeConfig([credentialsId: "kubectl-deploy-credentials",
+                        serverUrl: "https://8CADCFAB895961E497B572BE136D3D8D.gr7.ap-northeast-2.eks.amazonaws.com",
+                        clusterName: 'test-eks'){
+            sh "aws eks --region ap-northeast-2 update-kubeconfig --name test-eks"
+            sh "kubectl apply -f deploy.yaml"
+        }
     }
 }
