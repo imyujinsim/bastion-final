@@ -77,7 +77,7 @@ pipeline {
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
 ADD ./${ECR_IMAGE}.jar /home/${ECR_IMAGE}.jar
-CMD ["nohup", "java", "-jar", "-Dspring.profiles.active='mysql'", "/home/${ECR_IMAGE}.jar"]
+CMD ["nohup", "java", "-jar", "-Dskip-test", "-Dspring.profiles.active='mysql'", "/home/${ECR_IMAGE}.jar"]
 EOF
 """
                         docker.withRegistry("https://${ECR_PATH}", "ecr:ap-northeast-2:aws_credentials") {
@@ -132,6 +132,7 @@ EOF"""
 	}
     stage('Deploy to K8S'){
 	steps {
+	    sh pwd
             sh "kubectl apply -f deploy.yaml"
         }
     }
