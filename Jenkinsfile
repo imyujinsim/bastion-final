@@ -128,13 +128,9 @@ spec:
       - image: 851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/demo-maven-springboot:${env.BUILD_NUMBER}
         name: petclinic
 EOF"""
+	sh 'kubectl apply -f deploy.yaml
     }
 	}
-    stage('Deploy to K8S'){
-	steps {
-	    sh pwd
-            sh "kubectl apply -f deploy.yaml"
-        }
     }
   }
 }
