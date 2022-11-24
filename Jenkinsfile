@@ -48,7 +48,7 @@ pipeline {
                         """
                         // sh "sed -i 's/  version:.*/  version: \${VERSION:v${env.BUILD_NUMBER}}/g' /var/lib/jenkins/workspace/${env.JOB_NAME}/src/main/resources/application.yaml"
                         // sh "cat /var/lib/jenkins/workspace/${env.JOB_NAME}/src/main/resources/application.yaml"
-                        sh './mvnw package'
+                        sh './mvnw package -Dskip-test'
                         sh """
                         cd /var/lib/jenkins/workspace/${env.JOB_NAME}/
                         cp /var/lib/jenkins/workspace/${env.JOB_NAME}/target/*.jar ./${ECR_IMAGE}.jar
@@ -77,7 +77,7 @@ pipeline {
                         cat>Dockerfile<<-EOF
 FROM openjdk:11-jre-slim
 ADD ./${ECR_IMAGE}.jar /home/${ECR_IMAGE}.jar
-CMD ["nohup", "java", "-jar", "-Dskip-test", "-Dspring.profiles.active='mysql'", "/home/${ECR_IMAGE}.jar"]
+CMD ["nohup", "java", "-jar", "-Dspring.profiles.active='mysql'", "/home/${ECR_IMAGE}.jar"]
 EOF
 """
                         docker.withRegistry("https://${ECR_PATH}", "ecr:ap-northeast-2:aws_credentials") {
@@ -132,7 +132,7 @@ EOF"""
 	}
     stage('Deploy to K8S'){
 	steps {
-	    sh pwd
+	    pwd
             sh "kubectl apply -f deploy.yaml"
         }
     }
