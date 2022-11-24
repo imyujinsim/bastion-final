@@ -132,7 +132,7 @@ EOF"""
 	}
     stage('Deploy to K8S'){
 	steps {
-	    pwd
+	    sh pwd
             sh "kubectl apply -f deploy.yaml"
         }
     }
