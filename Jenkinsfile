@@ -134,7 +134,6 @@ EOF"""
 	steps {
             sh "kubectl apply -f deploy.yaml"
         }
-}
     }
   }
 }
