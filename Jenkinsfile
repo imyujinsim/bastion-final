@@ -128,7 +128,7 @@ spec:
       - image: 851557167064.dkr.ecr.ap-northeast-2.amazonaws.com/demo-maven-springboot:${env.BUILD_NUMBER}
         name: petclinic
 EOF"""
-	sh 'cd /var/lib/jenkins/bin
+	sh 'cd /var/lib/jenkins/bin'
 	sh './kubectl apply -f deploy.yaml'
     }
 	}
